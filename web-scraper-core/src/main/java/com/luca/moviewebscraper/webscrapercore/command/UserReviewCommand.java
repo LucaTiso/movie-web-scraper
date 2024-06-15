@@ -99,18 +99,8 @@ public class UserReviewCommand {
 
 			}
 
-			System.out.println("Date review: " + lastReviewDate);
 
-			System.out.println("to update :");
-
-			for (UserReviewDetail detail : userReviewDetailUpdate) {
-				System.out.println(detail);
-			}
-			System.out.println("to insert :");
-			for (UserReviewDetail detail : userReviewDetailInsert) {
-				System.out.println(detail);
-			}
-
+			
 			
 			
 		}catch(NoSuchElementException e) {

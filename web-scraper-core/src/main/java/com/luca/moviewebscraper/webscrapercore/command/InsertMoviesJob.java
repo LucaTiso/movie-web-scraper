@@ -1,13 +1,15 @@
 package com.luca.moviewebscraper.webscrapercore.command;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,8 +26,6 @@ public class InsertMoviesJob {
 
 	private final MovieStoreService movieStoreService;
 
-	private final String mainXmlPage = "https://www.metacritic.com/movies.xml";
-
 	private final ScrapingExecutorService scrapingExecutorService;
 
 	public InsertMoviesJob(MovieStoreService movieStoreService, ScrapingExecutorService scrapingExecutorService) {
@@ -37,22 +37,20 @@ public class InsertMoviesJob {
 
 		LOGGER.info("Start insert job");
 
-		Document document = null;
+		//Document document = null;
 
 		Set<String> insertUrlSet = new HashSet<>();
 
 		try {
-
-			document = Jsoup.connect(this.mainXmlPage).get();
-
-			Elements mainXmlElements = document.getElementsByTag("loc");
-			LOGGER.info("Main xml elements list : ");
-
-			List<String> subXmlList = mainXmlElements.stream().map(Element::text).toList();
+	
+			List<String> subXmlList=new ArrayList<>();
+			for(int i=1;i<=261;i++) {
+				subXmlList.add("https://www.metacritic.com/movies/"+i+".xml");
+			}
 
 			for (String e : subXmlList) {
 				
-				String xmlUrlString="https://"+e.split(" ")[1];
+				String xmlUrlString=e;
 				
 				LOGGER.info(xmlUrlString);
 
@@ -62,7 +60,7 @@ public class InsertMoviesJob {
 
 				Elements subXmlElements = subXmlDoument.getElementsByTag("loc");
 				
-				List<String> urlList=subXmlElements.stream().map(el->"https://"+el.text().split(" ")[1]).toList();
+				List<String> urlList=subXmlElements.stream().map(el->el.text()).toList();
 				
 
 				List<String> newUrlList = movieStoreService
@@ -75,6 +73,35 @@ public class InsertMoviesJob {
 				insertUrlSet.addAll(newUrlList);
 
 			}
+			
+
+			try(BufferedReader br=new BufferedReader(new FileReader("C:\\Users\\Utente\\Downloads\\movie_hrefs.txt"))){
+				while(br.ready()) {
+					
+					String url=br.readLine().trim();
+					List<String> tmpList=new ArrayList<>();
+					tmpList.add(url);
+					
+
+					tmpList=movieStoreService
+							.filterNewUlr(tmpList);
+					
+					if(tmpList.size()>0) {
+						insertUrlSet.addAll(tmpList);
+					}
+					
+					
+				}
+			}
+			
+			LOGGER.info("Searching movie set START");
+			
+			for(String m:insertUrlSet) {
+				LOGGER.info(m);
+			}
+			LOGGER.info("Searching movie set END");
+			
+			
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

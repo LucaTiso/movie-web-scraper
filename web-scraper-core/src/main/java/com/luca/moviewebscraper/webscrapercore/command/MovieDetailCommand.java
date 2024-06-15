@@ -29,7 +29,7 @@ public class MovieDetailCommand {
 			document = Jsoup.connect(movieHref).get();
 		} catch (IOException e) {
 
-			LOGGER.error("cannot get movie page: {}", movieHref);
+			LOGGER.warn("cannot get movie page: {}", movieHref);
 			return null;
 		}
 
@@ -44,7 +44,7 @@ public class MovieDetailCommand {
 		try {
 			movieHeader = document.getElementsByClass("c-heroMetadata").get(0);
 		} catch (IndexOutOfBoundsException e) {
-			LOGGER.error("cannot get c-heroMetadata for movie : {}", movieHref);
+			LOGGER.warn("cannot get c-heroMetadata for movie : {}", movieHref);
 			return null;
 		}
 

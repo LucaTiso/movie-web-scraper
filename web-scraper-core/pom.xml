@@ -34,8 +34,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-devtools-v121</artifactId>
-			<version>4.17.0</version>
+			<artifactId>selenium-devtools-v125</artifactId>
+			<version>4.21.0</version>
 		</dependency>
 	</dependencies>
 </project>

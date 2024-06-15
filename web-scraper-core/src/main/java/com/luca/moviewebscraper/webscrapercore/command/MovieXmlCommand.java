@@ -61,8 +61,7 @@ public class MovieXmlCommand {
 
 				List<String> movieHrefList = subXmlElements.stream().map(Element::text).toList();
 				
-				MovieIdAndUrl idAndUrl = new MovieIdAndUrl();
-				
+						
 				List<MovieIdAndUrl> idAndUrlList=new ArrayList<>();
 				
 				for(String s:movieHrefList) {
